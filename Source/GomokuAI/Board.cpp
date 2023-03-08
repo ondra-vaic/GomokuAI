@@ -130,32 +130,21 @@ void ABoard::PlaceStone(int32 index, EStoneType stoneType)
 
 void ABoard::Solve(int32 fromAction)
 {
-	int32 processorCount = std::thread::hardware_concurrency() - 1;
-	if(processorCount < 1)
-	{
-		processorCount = 1;
-	}
 	Solutions.clear();
 	
 	if(GomokuSolvers.size() == 0)
 	{
-		for (int i = 0; i < processorCount; ++i)
+		for (int i = 0; i < 2; ++i)
 		{
 			Solver* solver = new Solver(TimeToSolve, IterationsToSolve);
 			GomokuSolvers.push_back(solver);
 		}
 	}
 	
-	for (auto& solver : GomokuSolvers)
+	for (const auto& solver : GomokuSolvers)
 	{
 		Worker* worker = new Worker(solver, Board, TurnStone, fromAction);
 		Workers.push_back(worker);
-		
-		// solver->Initialize(Board, TurnStone, fromAction);
-		// solver = (Solver*)FRunnableThread::Create(solver, TEXT("---"));
-		
-		// std::shared_future<std::unordered_map<int, Evaluation>> future = std::async(&Solver::Solve, solver, std::ref(Board), TurnStone, fromAction);
-		// Solutions.push_back(future);
 	}
 }
 
@@ -196,24 +185,6 @@ int32 ABoard::TryGetSolution()
 			}
 		}
 	}
-	
-	// for (auto& future : Solutions)
-	// {
-	// 	std::unordered_map<int, Evaluation> edges = future.get();
-	//
-	// 	for (auto& edge : edges)
-	// 	{
-	// 		if(total.find(edge.first) == total.end())
-	// 		{
-	// 			total.emplace(edge.first, edge.second);
-	// 		}
-	// 		else
-	// 		{
-	// 			total[edge.first].NumVisited += edge.second.NumVisited;
-	// 			total[edge.first].SumScore += edge.second.SumScore;
-	// 		}
-	// 	}
-	// }
 
 	std::vector<std::pair<int, Evaluation>> sumEdgeVector;
 	for (auto edge : total)

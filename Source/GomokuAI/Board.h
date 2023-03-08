@@ -74,7 +74,7 @@ private:
 
 	bool IsWinningMove(int32 move, EStoneType stoneType) const;
 
-	static constexpr int32 Difficulties[] = {20, 75, 300, 500, 1000, 1500, 2500, 5000, 10000, 15000, 25000};
+	static constexpr int32 Difficulties[] = {20, 75, 300, 500, 650, 800, 1000, 1500, 2000, 3500, 5000};
 	
 private:
 
